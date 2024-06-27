@@ -12,7 +12,7 @@ class BaseObject:
         self,
         x: int,
         y: int,
-        color: tuple[int,int,int],
+        color: tuple[int, int, int],
         *,
         width: int,
         height: int,
@@ -26,7 +26,7 @@ class BaseObject:
             But also the basic draw method.
 
         Attributes:
-            screen (pygame.Surface): The game screen on which the object is rendered. Default is None.
+            screen (pygame.Surface): Game screen on which the object is rendered. Default is None.
             x (int): The x-coordinate of the object's position.
             y (int): The y-coordinate of the object's position.
             width (int): The width of the object.
@@ -40,7 +40,7 @@ class BaseObject:
             color (tuple): The color of the object, defined as an RGB tuple.
             width (int): The width of the object.
             height (int): The height of the object.
-            screen (pygame.Surface): The game screen on which the object is rendered. Defaults to None.
+            screen (pygame.Surface): Game screen on which the object is rendered. Defaults to None.
         """
         self.screen = screen
         self.x = x
@@ -91,8 +91,6 @@ class Paddle(BaseObject):
 
         self.speed = speed
 
-        self.slow_down_bar = 100
-
     def move(self) -> None:
         """
         Handles the movement of the paddle based on user input.
@@ -112,12 +110,11 @@ class Paddle(BaseObject):
 
         if keys[pygame.K_LEFT] and left_bound_check:
             self.rect.x -= self.speed
-        if keys[pygame.K_RIGHT] and  right_bound_check:
+        if keys[pygame.K_RIGHT] and right_bound_check:
             self.rect.x += self.speed
 
     def slow_down(self):
         self.speed = self.speed / 2
-        self.slow_down_bar = 100
 
 
 class Ball(BaseObject):
@@ -169,10 +166,7 @@ class Ball(BaseObject):
 
 
 def grid(screen):
-    # create a starting grid
-    width = screen.get_width()
-    height = screen.get_height()
-
+    # create a starting grid of bricks
     bricks = []
 
     for column in range(20):
@@ -189,6 +183,7 @@ def grid(screen):
 
 class Brick(BaseObject):
     PIXEL_BUFFER = 2
+
     def __init__(self, column, row, color, score, screen, *, width=20, height=20):
         super().__init__(column * width, row * height, color, width=width, height=height, screen=screen)
         # reduce actual widht and height by PIXEL_BUFFER to avoid overlap
@@ -200,17 +195,21 @@ class Brick(BaseObject):
         self.score = score
         self.screen = screen
 
+
 class EmptyBrick(Brick):
     def __init__(self, column, row, screen):
         super().__init__(column=column, row=row, color=(0, 0, 0), score=0, screen=screen)
+
 
 class RedBrick(Brick):
     def __init__(self, column, row, screen):
         super().__init__(column=column, row=row, color=RED, score=1, screen=screen)
 
+
 class GreenBrick(Brick):
     def __init__(self, column, row, screen):
         super().__init__(column=column, row=row, color=GREEN, score=2, screen=screen)
+
 
 class OrangeBrick(Brick):
     def __init__(self, column, row, screen):
