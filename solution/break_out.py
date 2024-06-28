@@ -107,6 +107,7 @@ while run_game_loop:
             font = pygame.font.Font(None, 74)
             text = font.render("Press p to continue", 1, BLACK)
             SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
+            pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_p:
@@ -114,15 +115,17 @@ while run_game_loop:
         # if no lives left, game over
         loose_game_condition = lives == 0
         if loose_game_condition:
+            # clear screen and display game over message
+            SCREEN.fill(GRAY)
+            pygame.draw.line(surface=SCREEN, color=BLACK, start_pos=(0, HEIGHT), end_pos=(WIDTH, HEIGHT))
             font = pygame.font.Font(None, 74)
             text = font.render("Game Over!", 1, BLACK)
             SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
+            pygame.display.flip()
             while True:
-                pygame.display.flip()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         run_game_loop = False
-        pygame.display.flip()
 
     # Update the display
     pygame.display.flip()
