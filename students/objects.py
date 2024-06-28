@@ -87,9 +87,7 @@ class Paddle(BaseObject):
             height (int, optional): The height of the paddle. Defaults to 20.
             speed (int, optional): The speed at which the paddle moves. Defaults to 5.
         """
-        super().__init__(x, y, color, width=width, height=height, screen=screen)
-
-        self.speed = speed
+        pass
 
     def move(self) -> None:
         """
@@ -102,19 +100,8 @@ class Paddle(BaseObject):
             screen (pygame.Surface): The game screen to which the paddle's movement is relative.
         """
         # get the pressed keys
-        keys = pygame.key.get_pressed()
 
         # movement with bound checks
-        left_bound_check = self.rect.left > 0
-        right_bound_check = self.rect.right < self.screen.get_width()
-
-        if keys[pygame.K_LEFT] and left_bound_check:
-            self.rect.x -= self.speed
-        if keys[pygame.K_RIGHT] and right_bound_check:
-            self.rect.x += self.speed
-
-    def slow_down(self):
-        self.speed = self.speed / 2
 
 
 class Ball(BaseObject):
@@ -145,20 +132,10 @@ class Ball(BaseObject):
 
     def move(self):
         # move the ball
-        self.x += self.speed * self.direction_x
-        self.y += self.speed * self.direction_y
-        # update the rect
-        self.rect.topleft = (self.x, self.y)
 
         # check if the ball hits the wall
-        left_wall = self.rect.left <= 0
-        right_wall = self.rect.right >= self.screen.get_width()
-        up_wall = self.rect.top <= 0
         # lower wall is not checked, because the game is lost if it hits the lower wall
-        if right_wall or left_wall:
-            self.direction_x *= -1
-        if up_wall:
-            self.direction_y *= -1
+        pass
 
     def collide(self, collision_object) -> bool:
         # returns True if the ball collides with the object
@@ -168,18 +145,11 @@ class Ball(BaseObject):
 def grid(screen):
     # create a starting grid of bricks
     bricks = []
-
+    # 1 row of orange bricks, 2 rows of green bricks, 3 rows of red bricks
     for column in range(20):
-        for row in range(6):
-            if row < 1:
-                bricks.append(OrangeBrick(column, row, screen=screen))
-            elif row < 3:
-                bricks.append(GreenBrick(column, row, screen=screen))
-            elif row < 6:
-                bricks.append(RedBrick(column, row, screen=screen))
-    num_of_bricks = len(bricks)
-    return bricks, num_of_bricks
+        # create a row of bricks
 
+    return bricks
 
 class Brick(BaseObject):
     PIXEL_BUFFER = 2
@@ -197,19 +167,23 @@ class Brick(BaseObject):
 
 class EmptyBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=(0, 0, 0), score=0, screen=screen)
+        # no score, no color
+        pass
 
 
 class RedBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=RED, score=1, screen=screen)
+        # score 1, red color
+        pass
 
 
 class GreenBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=GREEN, score=2, screen=screen)
+        # score 2, green color
+        pass
 
 
 class OrangeBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=ORANGE, score=3, screen=screen)
+        # score 3, orange color
+        pass

@@ -90,7 +90,7 @@ while run_game_loop:
     # win and loose conditions
     win_condition = num_of_bricks == 0
     if win_condition:
-        font = pygame.font.Font(None, 74)
+        font = pygame.font.Font(None, 25)
         text = font.render("You Won!", 1, BLACK)
         SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
         run_game_loop = False
@@ -104,7 +104,7 @@ while run_game_loop:
         # pause the game until press p
         pause_mode = True
         while pause_mode:
-            font = pygame.font.Font(None, 74)
+            font = pygame.font.Font(None, 25)
             text = font.render("Press p to continue", 1, BLACK)
             SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
             pygame.display.flip()
