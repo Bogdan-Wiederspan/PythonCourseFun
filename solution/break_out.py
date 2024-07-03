@@ -1,7 +1,8 @@
 import pygame
 from objects import Paddle, Ball, EmptyBrick
 from util import grid, check_collision, game_over, press_continue, win
-from constants import WIDTH, HEIGHT, RED, BLUE, GRAY, BLACK
+from constants import WIDTH, HEIGHT, RED, BLUE
+
 pygame.init()
 
 score = 0
@@ -9,6 +10,7 @@ lives = 3
 run_game_loop = True
 
 # Set up the game window
+# buffer for font on the bottom of the screen
 FONT_BUFFER_PIXEL = 50
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT + FONT_BUFFER_PIXEL))
 pygame.display.set_caption("Break Out")
@@ -35,18 +37,6 @@ while run_game_loop:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game_loop = False
-
-    # screen clearing and drawing
-    # background
-    SCREEN.fill(GRAY)
-    pygame.draw.line(surface=SCREEN, color=BLACK, start_pos=(0, HEIGHT), end_pos=(WIDTH, HEIGHT))
-
-    # score and live text
-    font = pygame.font.Font(None, 34)
-    text = font.render(f"Score: {score}", 1, BLACK)
-    SCREEN.blit(text, (20, SCREEN.get_height() - 40))
-    text = font.render(f"Lives: {lives}", 1, BLACK)
-    SCREEN.blit(text, (160, SCREEN.get_height() - 40))
 
     # draw all elements
     paddle.draw()
@@ -80,7 +70,7 @@ while run_game_loop:
     # win and loose conditions
     win_condition = num_of_bricks == 0
     if win_condition:
-        win(SCREEN)
+        run_game_loop = win(SCREEN)
 
     loose_live_condition = ball.y >= HEIGHT
     if loose_live_condition:
@@ -91,7 +81,7 @@ while run_game_loop:
         # if no lives left, game over
         loose_game_condition = lives == 0
         if loose_game_condition:
-            game_over(SCREEN)
+            run_game_loop = game_over(SCREEN)
 
         press_continue(SCREEN)
 

@@ -53,8 +53,8 @@ def game_over(screen):
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run_game_loop = False
-                break
+                return False
+
 
 @pause
 def win(screen):
@@ -70,7 +70,8 @@ def win(screen):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:
-                    run_game_loop = False
+                    return False
+
 
 @pause
 def press_continue(screen):
@@ -83,3 +84,19 @@ def press_continue(screen):
     screen.blit(text, (width // 2, height // 2))
     pygame.display.flip()
 
+
+def draw_static_background(screen, height=HEIGHT, widht=WIDTH, score=0, lives=3):
+    # screen clearing and drawing
+    # background
+    screen.fill(GRAY)
+    pygame.draw.line(surface=screen, color=BLACK, start_pos=(0, height), end_pos=(widht, height))
+
+    # score and live text, this is updated every cycle
+    # clear font
+    font = pygame.font.Font(None, 34)
+    # render text
+    text = font.render(f"Score: {score}", 1, BLACK)
+    text_screen_position = screen.get_height() - 40
+    screen.blit(text, (20, text_screen_position))
+    text = font.render(f"Lives: {lives}", 1, BLACK)
+    screen.blit(text, (160, text_screen_position))
