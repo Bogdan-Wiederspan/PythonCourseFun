@@ -1,17 +1,8 @@
 import pygame
-from objects import Paddle, Ball, grid, EmptyBrick
+from objects import Paddle, Ball, EmptyBrick
+from util import grid, check_collision, game_over, press_continue, win
+from constants import WIDTH, HEIGHT, RED, BLUE, GRAY, BLACK
 pygame.init()
-
-# colorspace & constants
-WHITE = (255, 255, 255)
-GRAY = (128, 128, 128)
-RED = (255, 0, 0)
-BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
-MAX_BALL_SPEED = 8
-
-# (400 x 600) 20 stones a 20 pixels widht, 30 stones a 20 pixels
-WIDTH, HEIGHT = (20 * 20, 30 * 20)
 
 score = 0
 lives = 3
@@ -70,30 +61,26 @@ while run_game_loop:
     # ball and wall
     for num_brick, brick in enumerate(bricks):
         brick.draw()
-        if ball.collide(brick):
+        if check_collision(ball, brick) and not isinstance(brick, EmptyBrick):
             pygame.mixer.Sound.play(sfx_hit_brick)
             score += brick.score
             num_of_bricks -= 1
             # replace the brick with an empty brick that has the same position
+            # pop(num_brick) is an alternativ way, but creates graphic bugs
             bricks[num_brick] = EmptyBrick(brick.x, brick.y, screen=brick.screen)
+            # bricks.pop(num_brick)
             # reverse the direction of the ball and increase speed
-            ball.direction_y *= -1
-            if isinstance(brick, EmptyBrick):
-                ball.speed = min(ball.speed * 1.01, MAX_BALL_SPEED)
+            side_hit = brick.side_hit(ball.x)
+            ball.collide_with_brick(side_hit)
 
-    # ball and paddle
-    # increase speed by 10% each time the ball hits the paddle
-    if ball.collide(paddle):
-        ball.direction_y = -1
-        ball.speed = min(ball.speed * 1.10, MAX_BALL_SPEED)
+    # ball and paddle interaction
+    if check_collision(ball, paddle):
+        ball.collide_with_paddle()
 
     # win and loose conditions
     win_condition = num_of_bricks == 0
     if win_condition:
-        font = pygame.font.Font(None, 25)
-        text = font.render("You Won!", 1, BLACK)
-        SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
-        run_game_loop = False
+        win(SCREEN)
 
     loose_live_condition = ball.y >= HEIGHT
     if loose_live_condition:
@@ -101,31 +88,12 @@ while run_game_loop:
         lives -= 1
         ball.reset()
 
-        # pause the game until press p
-        pause_mode = True
-        while pause_mode:
-            font = pygame.font.Font(None, 25)
-            text = font.render("Press p to continue", 1, BLACK)
-            SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
-            pygame.display.flip()
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
-                        pause_mode = False
         # if no lives left, game over
         loose_game_condition = lives == 0
         if loose_game_condition:
-            # clear screen and display game over message
-            SCREEN.fill(GRAY)
-            pygame.draw.line(surface=SCREEN, color=BLACK, start_pos=(0, HEIGHT), end_pos=(WIDTH, HEIGHT))
-            font = pygame.font.Font(None, 74)
-            text = font.render("Game Over!", 1, BLACK)
-            SCREEN.blit(text, (WIDTH // 2 - 100, HEIGHT // 2))
-            pygame.display.flip()
-            while True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        run_game_loop = False
+            game_over(SCREEN)
+
+        press_continue(SCREEN)
 
     # Update the display
     pygame.display.flip()
