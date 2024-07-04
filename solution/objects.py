@@ -56,6 +56,9 @@ class BaseObject:
         """
         pygame.draw.rect(self.screen, self.color, self.rect)
 
+    def move(self):
+        pass
+
 
 class Paddle(BaseObject):
     def __init__(
@@ -118,12 +121,13 @@ class Paddle(BaseObject):
 
 
 class Ball(BaseObject):
-    def __init__(self, x, y, color, screen, *, radius=10, speed=5, direction_x=1, direction_y=1):
+    def __init__(self, x, y, color, screen, *, radius=10, speed=5, direction_x=1, direction_y=1, max_speed=10):
         super().__init__(x, y, color, width=radius, height=radius, screen=screen)
         # balls are squares, so width and height are the same
         self.radius = radius
-        self.start_speed = speed
         self.speed = speed
+        self.initial_speed = speed
+        self.max_speed = max_speed
 
         # > 0 (right, down), < 0 (left, up)
         self.direction_x = direction_x
@@ -141,7 +145,7 @@ class Ball(BaseObject):
         self.direction_x = random.choice([-1, 1])
         self.direction_y = random.choice([-1, 1])
 
-        self.speed = self.start_speed
+        self.speed = self.initial_speed
 
     def move(self):
         # move the ball
@@ -160,25 +164,24 @@ class Ball(BaseObject):
         if up_wall:
             self.direction_y *= -1
 
-    def collide(self, collision_object) -> bool:
-        # returns True if the ball collides with the object
-        return self.rect.colliderect(collision_object)
+    def collide_with_paddle(self):
+        """
+        Modify ball direction when it hits the paddle
+        """
+        self.direction_y = -1
+        self.speed = min(self.speed, self.max_speed)
 
+    def collide_with_brick(self, side=None):
+        """
+        Modify ball direction and speed when it hits a brick.
+        Depending on the side of the brick that the ball hits.
 
-def grid(screen):
-    # create a starting grid of bricks
-    bricks = []
-
-    for column in range(20):
-        for row in range(6):
-            if row < 1:
-                bricks.append(OrangeBrick(column, row, screen=screen))
-            elif row < 3:
-                bricks.append(GreenBrick(column, row, screen=screen))
-            elif row < 6:
-                bricks.append(RedBrick(column, row, screen=screen))
-    num_of_bricks = len(bricks)
-    return bricks, num_of_bricks
+        side (str): The side of the brick that the ball hits.
+        """
+        if side == "left" or side == "right":
+            self.direction_x *= -1
+        self.direction_y *= -1
+        self.speed = min(self.speed * 1.01, self.max_speed)
 
 
 class Brick(BaseObject):
@@ -194,6 +197,13 @@ class Brick(BaseObject):
         # score of the brick
         self.score = score
 
+    def side_hit(self, x):
+        side = None
+        if x <= self.rect.left:
+            side = "left"
+        elif x >= self.rect.right:
+            side = "right"
+        return side
 
 class EmptyBrick(Brick):
     def __init__(self, column, row, screen):
