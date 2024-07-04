@@ -54,6 +54,7 @@ class BaseObject:
         pygame.draw.rect(self.screen, self.color, self.rect)
 
     def move(self):
+        # no code adjustment needed
         pass
 
 
@@ -87,9 +88,10 @@ class Paddle(BaseObject):
             height (int, optional): The height of the paddle. Defaults to 20.
             speed (int, optional): The speed at which the paddle moves. Defaults to 5.
         """
-        super().__init__(x, y, color, width=width, height=height, screen=screen)
-
-        self.speed = speed
+        # ADD CODE HERE
+        # super call to the parent class
+        # set speed as an attribute
+        pass
 
     def move(self) -> None:
         """
@@ -101,20 +103,13 @@ class Paddle(BaseObject):
         Parameters:
             screen (pygame.Surface): The game screen to which the paddle's movement is relative.
         """
+        # ADD CODE HERE
         # get the pressed keys
-        keys = pygame.key.get_pressed()
 
         # movement with bound checks
-        left_bound_check = self.rect.left > 0
-        right_bound_check = self.rect.right < self.screen.get_width()
+        # add bound checks for the left and right sides of the screen
 
-        if keys[pygame.K_LEFT] and left_bound_check:
-            self.rect.x -= self.speed
-        if keys[pygame.K_RIGHT] and right_bound_check:
-            self.rect.x += self.speed
-
-    def slow_down(self):
-        self.speed = self.speed / 2
+        # adjust the paddle's x-coordinate based on the pressed keys and bound checks
 
 
 class Ball(BaseObject):
@@ -145,28 +140,24 @@ class Ball(BaseObject):
         self.speed = self.initial_speed
 
     def move(self):
+        # ADD CODE HERE
         # move the ball
-        self.x += self.speed * self.direction_x
-        self.y += self.speed * self.direction_y
-        # update the rect
-        self.rect.topleft = (self.x, self.y)
 
         # check if the ball hits the wall
         left_wall = self.rect.left <= 0
         right_wall = self.rect.right >= self.screen.get_width()
         up_wall = self.rect.top <= 0
-        # lower wall is not checked, because the game is lost if it hits the lower wall
-        if right_wall or left_wall:
-            self.direction_x *= -1
-        if up_wall:
-            self.direction_y *= -1
+
+        # adjust the direction of the ball based on the wall hits
 
     def collide_with_paddle(self):
         """
         Modify ball direction when it hits the paddle
         """
-        self.direction_y = -1
-        self.speed = min(self.speed, self.max_speed)
+        # ADD CODE HERE
+        # add paddle collision logic
+        # adjust speed, but try to keep it within the max_speed limit
+        pass
 
     def collide_with_brick(self, side=None):
         """
@@ -175,10 +166,12 @@ class Ball(BaseObject):
 
         side (str): The side of the brick that the ball hits.
         """
-        if side == "left" or side == "right":
-            self.direction_x *= -1
-        self.direction_y *= -1
-        self.speed = min(self.speed * 1.01, self.max_speed)
+        # ADD CODE HERE
+        # add brick collision logic
+        # when hit lef or right side, change x direction
+        # always change y
+
+        # change speed
 
 
 class Brick(BaseObject):
@@ -196,27 +189,32 @@ class Brick(BaseObject):
 
     def side_hit(self, x):
         side = None
-        if x <= self.rect.left:
-            side = "left"
-        elif x >= self.rect.right:
-            side = "right"
+        # ADD CODE HERE
+        # define which side of the brick was hit
+        # x is the x-coordinate of the ball
+        # get the side coordinate by rect.left and rect.right
         return side
+
 
 class EmptyBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=(0, 0, 0), score=0, screen=screen)
+        # ADD CODE HERE
+        # no score, no color, use inherited __init__ method
 
 
 class RedBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=RED, score=1, screen=screen)
+        # ADD CODE HERE
+        # score 1, color RED, use inherited __init__ method
 
 
 class GreenBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=GREEN, score=2, screen=screen)
+        # ADD CODE HERE
+        # score 2, color GREEN, use inherited __init__ method
 
 
 class OrangeBrick(Brick):
     def __init__(self, column, row, screen):
-        super().__init__(column=column, row=row, color=ORANGE, score=3, screen=screen)
+        # ADD CODE HERE
+        # score 3, color ORANGE, use inherited __init__ method

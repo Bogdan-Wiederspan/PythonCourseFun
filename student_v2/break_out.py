@@ -2,7 +2,6 @@ import pygame
 from objects import Paddle, Ball, EmptyBrick
 from util import grid, check_collision, game_over, press_continue, win
 from constants import WIDTH, HEIGHT, RED, BLUE
-
 pygame.init()
 
 score = 0
@@ -38,46 +37,43 @@ while run_game_loop:
         if event.type == pygame.QUIT:
             run_game_loop = False
 
+    # ADD CODE HERE
     # draw all elements
-    paddle.draw()
-    ball.draw()
 
     # game logic
     # movement
-    paddle.move()
-    ball.move()
+
 
     # collision detection
     # ball and wall
+
     for num_brick, brick in enumerate(bricks):
-        brick.draw()
-        if check_collision(ball, brick) and not isinstance(brick, EmptyBrick):
-            pygame.mixer.Sound.play(sfx_hit_brick)
-            score += brick.score
-            num_of_bricks -= 1
-            # replace the brick with an empty brick that has the same position
-            # pop(num_brick) is an alternativ way, but creates graphic bugs
-            bricks[num_brick] = EmptyBrick(brick.x, brick.y, screen=brick.screen)
-            # bricks.pop(num_brick)
+        # ADD CODE HERE
+        # draw brick
+        # check if ball collides with brick
+        is_collision = check_collision(ball, brick)
+        not_empty_brick = not isinstance(brick, EmptyBrick)
+        if is_collsion and not_empty_brick:
+            # ADD CODE HERE
+            # play sound
+            # increase score
+            # decrease number of bricks
+            # remove brick
             # reverse the direction of the ball and increase speed
-            side_hit = brick.side_hit(ball.x)
-            ball.collide_with_brick(side_hit)
 
     # ball and paddle interaction
-    if check_collision(ball, paddle):
-        ball.collide_with_paddle()
+    # ADD CODE HERE
+    # check if ball collides with paddle
 
-    # win and loose conditions
-    win_condition = num_of_bricks == 0
-    if win_condition:
-        run_game_loop = win(SCREEN)
+    # ADD CODE HERE
+    # win and loose conditions, use win from util.py
 
+    # ADD CODE HERE
+    # loose condition
+    # decrease lives, reset ball
     loose_live_condition = ball.y >= HEIGHT
     if loose_live_condition:
-        pygame.mixer.Sound.play(sfx_death)
-        lives -= 1
-        ball.reset()
-
+        # ADD CODE HERE
         # if no lives left, game over
         loose_game_condition = lives == 0
         if loose_game_condition:
