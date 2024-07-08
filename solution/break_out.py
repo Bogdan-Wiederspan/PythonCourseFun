@@ -1,6 +1,6 @@
 import pygame
 from objects import Paddle, Ball, EmptyBrick
-from util import grid, check_collision, game_over, press_continue, win
+from util import grid, check_collision, game_over, press_continue, win, draw_static_background
 from constants import WIDTH, HEIGHT, RED, BLUE
 
 pygame.init()
@@ -37,6 +37,14 @@ while run_game_loop:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game_loop = False
+
+    # draw background
+    draw_static_background(
+        SCREEN,
+        height=HEIGHT,
+        widht=WIDTH,
+        score=score,
+        lives=lives)
 
     # draw all elements
     paddle.draw()

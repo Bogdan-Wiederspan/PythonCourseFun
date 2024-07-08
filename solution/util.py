@@ -2,6 +2,7 @@ from objects import OrangeBrick, GreenBrick, RedBrick
 from constants import WIDTH, HEIGHT, GRAY, BLACK
 import pygame
 
+
 def grid(screen):
     # create a starting grid of bricks
     bricks = []
@@ -16,6 +17,7 @@ def grid(screen):
                 bricks.append(RedBrick(column, row, screen=screen))
     num_of_bricks = len(bricks)
     return bricks, num_of_bricks
+
 
 def check_collision(objA, objB):
     # returns True if the ball collides with the object
@@ -100,3 +102,4 @@ def draw_static_background(screen, height=HEIGHT, widht=WIDTH, score=0, lives=3)
     screen.blit(text, (20, text_screen_position))
     text = font.render(f"Lives: {lives}", 1, BLACK)
     screen.blit(text, (160, text_screen_position))
+    return screen

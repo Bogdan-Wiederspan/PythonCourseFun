@@ -202,6 +202,7 @@ class Brick(BaseObject):
             side = "right"
         return side
 
+
 class EmptyBrick(Brick):
     def __init__(self, column, row, screen):
         super().__init__(column=column, row=row, color=(0, 0, 0), score=0, screen=screen)
